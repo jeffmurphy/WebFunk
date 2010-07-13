@@ -1,0 +1,72 @@
+Net-WebFunk-API
+===============
+
+The README is used to introduce the module and provide instructions on
+how to install the module, any machine dependencies it may have (for
+example C compilers and installed libraries) and any other information
+that should be provided before the module is installed.
+
+A README file is required for CPAN modules since CPAN extracts the
+README file from a module distribution so that people browsing the
+archive can use it get an idea of the modules uses. It is usually a
+good idea to provide version information here so that people can
+decide whether fixes for the module are worth downloading.
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+QUICK START
+
+cd WebFunk
+mkdir -p /var/www/exposed/MyProject
+sed '1,1s/Net::WebFunk::API::Exposed/MyProject/g' lib/Net/WebFunk/API/Exposed/Template.pm > /var/www/exposed/MyProject/Template.pm
+
+Create /etc/httpd/conf.d/WebFunk.conf with:
+
+	<Location /api>
+        # so we don't have to restart the server every time
+        PerlInitHandler Apache2::Reload
+        PerlSetVar ReloadAll On
+
+        SetHandler perl-script
+        PerlSetVar WebFunkRoot '/var/www/exposed'
+        PerlSetVar WebFunkExpRoot 'MyProject'
+        PerlResponseHandler Net::WebFunk::API::Apache2
+	</Location>
+
+Restart Apache and go to http://localhost/api and you should see the doc for 
+modules exposed as part of "MyProject". "Template" should be the only one at this
+point.
+
+DEPENDENCIES
+
+This module requires these other modules and libraries:
+
+JSON
+Moose
+Module::Pluggable
+Pod::POM
+Pod::POM::View::HTML
+Apache2::Request
+Apache2::RequestRec
+Apache2::RequestIO
+Apache2::Const
+Apache2::URI
+
+COPYRIGHT AND LICENCE
+
+Put the correct copyright and license information here.
+
+Copyright (C) 2010 by Robert Colantuoni, Jeff Murphy
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.8.8 or,
+at your option, any later version of Perl 5 you may have available.
+
+

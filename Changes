@@ -1,0 +1,25 @@
+Revision history for Perl extension Net::WebFunk::API.
+
+0.01  Tue Jun 22 10:18:01 2010
+	- original version; created by h2xs 1.23 with options
+		-AXc -n Net::JS::API
+
+
+0.02  20100626 1am
+
+Removed GET code from generated API 
+converted to POST so as to handle nested JSON objects
+got rid of eval() in callback and instead am passing the raw JSON object returned from the server
+mod'd gethttp() fnx to be more browser tolerant
+mod'd Template to demonstrate POST vs GET
+
+
+0.03 20100712
+
+Added Perl generation so that you can connect perl clients to the API as well as JS clients
+Renamed from Net::JS to Net::WebFunk 
+
+0.04 20100713
+
+Added ability to specify multiple apache binding points and associate those to separate module
+repositories
