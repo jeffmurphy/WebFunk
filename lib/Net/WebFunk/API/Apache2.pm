@@ -64,8 +64,8 @@ sub handler {
 	#my $wantdoc = ((!$wantperl) && (($#http_accept == 0) && ($http_accept[0] eq "application/javascript") || ($http_accept[0] eq "*/*"))) ? 0 : 1;
 	my $wantdoc = (!$wantperl && !$wantjs) ? 1 : 0;
 	
-	print STDERR $r->uri . " accept: $acceptheader \n";
-	print STDERR $r->uri . " client wants any of: " . join(', ', @http_accept) . " wantdoc:$wantdoc wantperl:$wantperl wantjs:$wantjs\n";
+	#print STDERR $r->uri . " accept: $acceptheader \n";
+	#print STDERR $r->uri . " client wants any of: " . join(', ', @http_accept) . " wantdoc:$wantdoc wantperl:$wantperl wantjs:$wantjs\n";
 	
 	# if the top level (typically http://server/api or http://server/api/) is called
 	# then this code handles outputting all of the exposed modules or a table
