@@ -81,14 +81,28 @@ sub handler {
 		if ($wantdoc) {
 			my $baseclass = $r->dir_config('WebFunkExpRoot');
 			$baseclass =~ s/;/, /g;
-			print "<h1>$baseclass</h1>";
-			print "<h2>Exposed Objects</h2>";
+			$r->print("<style>PRE {border-left:3px solid blue; padding-left: 3px; }</style>");
+			$r->print("<h1>Package: $baseclass</h1>");
+			$r->print("<h2>Exposed Objects</h2><ul>");
 			foreach my $exposedModule ($api->exposed()) {
         		my $module = new $exposedModule;
         		my $exmod = ref($module);
         		$exmod =~ s/^${baseclass}:://;
-        		print '<a href="' . $r->construct_url . "/$exmod/\">" . "$exmod</a><br/>";
+        		my $url = $r->construct_url;
+        		$r->print('<li><a href="' . $url . "/$exmod/\">" . "$exmod</a><br/>");
 			}
+       		$r->print("</ul><h2>Javascript Header</h2><pre>".$api->JSHeader);
+			foreach my $exposedModule ($api->exposed()) {
+        		my $module = new $exposedModule;
+				$r->print($module->JSStub($r->construct_url));
+			}
+			$r->print("</pre><P/>");
+			$r->print("<h2>Perl Header</h2><pre>".$api->PerlHeader);
+			foreach my $exposedModule ($api->exposed()) {
+        		my $module = new $exposedModule;
+				$r->print($module->PerlStub($r->construct_url));
+			}
+			$r->print("</pre><P/>");
 		} else {
 			$r->print($api->JSHeader) if $wantjs;
 			$r->print($api->PerlHeader) if $wantperl;
