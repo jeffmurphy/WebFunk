@@ -136,26 +136,27 @@ function getHTTPObject() {
 	return xhr;
 }
 
-var http = getHTTPObject();
-
 function debugHandler(objjself, objjsel, s) {
 	var obj = JSON.parse(s.toString());
 	alert("raw reply: " + s + " decoded reply: status=" + obj.status + ", message=" + obj.message);
 }
 
 function getMethod(url, obj, callback, objjself, objjselector) {
+		var http = getHTTPObject();
 		if (JSON != undefined) {
-				http.open("POST", url, callback ? true : false);
+				var async = (typeof(callback) == "function") ? true : false;
+				http.open("POST", url, async);
 				http.setRequestHeader("Accept", "application/javascript");
-				http.setRequestHeader('User-Agent',"WebFunk/${VERSION}");
-				if (callback)
+				http.setRequestHeader('User-Agent', "WebFunk/${VERSION};" + (callback ? "a" : "") + "synchronous");
+				if (async) {
 					http.onreadystatechange = function() {
-						if (http.readyState==4)
-							if (http.status==200)
+						if (http.readyState == 4)
+							if (http.status == 200)
 								callback(objjself, objjselector, http.responseText);
 					}
+				}
 				http.send(JSON.stringify(obj));
-				if (!callback) return http.responseText;
+				if (async == false) return http.responseText;
 		} else 
 			alert ("You must install and include JSON.js (Net::WebFunk::API)");
 }
@@ -188,7 +189,7 @@ sub getMethod {
 	die "obj must be a hashref" unless (defined(\$obj) && (ref(\$obj) eq "HASH"));
 	my \$ua = new LWP::UserAgent();
 	die "couldnt make new LWP::UserAgent" unless \$ua;
-	\$ua->agent("WebFunk/${VERSION}");
+	\$ua->agent("WebFunk/${VERSION};" . (defined(\$callback) ? "a" : "") . "synchronous");
 	my \$req = new HTTP::Request(POST => \$url);
 	die "couldnt make new HTTP::Request" unless \$req;
 	\$req->content_type('application/x-www-form-urlencoded');
