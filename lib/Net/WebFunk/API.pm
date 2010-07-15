@@ -133,7 +133,7 @@ function getHTTPObject() {
 			}
 		}
 	}
-	return xhr;//return the value of xhr
+	return xhr;
 }
 
 var http = getHTTPObject();
