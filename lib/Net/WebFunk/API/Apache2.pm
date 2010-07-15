@@ -81,23 +81,29 @@ sub handler {
 		if ($wantdoc) {
 			my $baseclass = $r->dir_config('WebFunkExpRoot');
 			$baseclass =~ s/;/, /g;
-			$r->print("<style>PRE {border-left:3px solid blue; padding-left: 3px; }</style>");
+			$r->print("<style>
+			PRE {border:2px dashed #8888AA; background: #DDDDFF; margin-left: 30px; padding: 10px; } 
+			TABLE {border: none; width: 85%; margin-left: 30px;}
+			TD.col1 {width: 10%; }
+			TD.col2 {border-bottom: 2px solid black; }
+			</style>");
 			$r->print("<h1>Package: $baseclass</h1>");
-			$r->print("<h2>Exposed Objects</h2><ul>");
+			$r->print("<h2>Exposed Objects</h2><table>");
 			foreach my $exposedModule ($api->exposed()) {
         		my $module = new $exposedModule;
         		my $exmod = ref($module);
         		$exmod =~ s/^${baseclass}:://;
         		my $url = $r->construct_url;
-        		$r->print('<li><a href="' . $url . "/$exmod/\">" . "$exmod</a><br/>");
+        		my $mdesc = $module->_mydoc(1);
+        		$r->print('<tr><td class="col1"><a href="' . $url . "/$exmod/\">" . "$exmod</td><td class='col2'>$mdesc</td></tr></a><br/>");
 			}
-       		$r->print("</ul><h2>Javascript Header</h2><pre>".$api->JSHeader);
+       		$r->print("</table><h2>Javascript Header</h2>When connecting using Javascript, specify an Accept header of <code>application/javascript</code> (if using XHR or just use a <code>&lt;script&gt;</code> tag otherwise) to receive the following binding code.<p/><pre>".$api->JSHeader);
 			foreach my $exposedModule ($api->exposed()) {
         		my $module = new $exposedModule;
 				$r->print($module->JSStub($r->construct_url));
 			}
 			$r->print("</pre><P/>");
-			$r->print("<h2>Perl Header</h2><pre>".$api->PerlHeader);
+			$r->print("<h2>Perl Header</h2>When connecting using a Perl script, specify an Accept header of <code>application/perl</code> to receive the following binding code.<p/><pre>".$api->PerlHeader);
 			foreach my $exposedModule ($api->exposed()) {
         		my $module = new $exposedModule;
 				$r->print($module->PerlStub($r->construct_url));
@@ -181,7 +187,7 @@ sub handler {
 					print STDERR "The client wants doc for this module, but you forgot the _mydoc routine. " . $r->path_info . "\n";
 					$r->print("Documentation unavailable (_mydoc missing)");
 				} else {
-					$r->print($module->_mydoc($r->construct_url));
+					$r->print($module->_mydoc(0));
 				}
 			} else {	
 				$r->print($api->JSHeader) if $wantjs;
