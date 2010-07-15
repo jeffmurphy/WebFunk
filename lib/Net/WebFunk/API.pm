@@ -145,15 +145,19 @@ function debugHandler(objjself, objjsel, s) {
 
 function getMethod(url, obj, callback, objjself, objjselector) {
 		if (JSON != undefined) {
-        		http.open("POST", url, true);
+        		http.open("POST", url, callback ? true : false);
         		http.setRequestHeader("Accept", "application/javascript");
         		http.setRequestHeader('User-Agent',"WebFunk/$Net::WebFunk::API::VERSION");
-        		http.onreadystatechange = function() {
+        		if (callback)
+        			http.onreadystatechange = function() {
                 		if (http.readyState==4)
                        	 		if (http.status==200)
                        	         		callback(objjself, objjselector, http.responseText);
                 	}
-			http.send(JSON.stringify(obj));
+				http.send(JSON.stringify(obj));
+				if (!callback) {
+					return http.responseText;
+				}
 		} else 
 			alert ("You must install and include JSON.js (Net::WebFunk::API)");
 }
@@ -234,7 +238,7 @@ sub PerlStub {
 
 	my $exposedMethods = $self->exposedMethodList();
     foreach my $methodName (@$exposedMethods) {
-		my $funcCode = "sub ${moduleName}::${methodName} { WebFunkAPI::getMethod('$url/$moduleName/$methodName/', shift, shift); }";
+		my $funcCode = "sub ${moduleName}::${methodName} { return WebFunkAPI::getMethod('$url/$moduleName/$methodName/', shift, shift); }";
         push (@functionList, $funcCode);
     }
 
@@ -266,7 +270,7 @@ sub JSStub {
 
 	my $exposedMethods = $self->exposedMethodList();
     foreach my $methodName (@$exposedMethods) {
-    	my $jsFunction = "\t$methodName: function(oArg, handler, objjself, objjselector) {\n\t\t getMethod('$url/$moduleName/$methodName/', oArg, handler, objjself, objjselector);\n\t}";
+    	my $jsFunction = "\t$methodName: function(oArg, handler, objjself, objjselector) {\n\t\t return getMethod('$url/$moduleName/$methodName/', oArg, handler, objjself, objjselector);\n\t}";
         push (@jsFunctionList, $jsFunction);
     }
 
