@@ -88,7 +88,7 @@ sub handler {
 			TD.col2 {border-bottom: 2px solid black; }
 			</style>");
 			$r->print("<h1>Package: $baseclass</h1>");
-			$r->print("<h2>Exposed Objects</h2><table>");
+			$r->print("<h2>Exposed Methods</h2><table>");
 			foreach my $exposedModule ($api->exposed()) {
         		my $module = new $exposedModule;
         		my $exmod = ref($module);
@@ -97,13 +97,13 @@ sub handler {
         		my $mdesc = $module->_mydoc(1);
         		$r->print('<tr><td class="col1"><a href="' . $url . "/$exmod/\">" . "$exmod</td><td class='col2'>$mdesc</td></tr></a><br/>");
 			}
-       		$r->print("</table><h2>Javascript Header</h2>When connecting using Javascript, specify an Accept header of <code>application/javascript</code> (if using XHR or just use a <code>&lt;script&gt;</code> tag otherwise) to receive the following binding code.<p/><pre>".$api->JSHeader);
+       		$r->print("</table><h2>Javascript Header</h2>When connecting using Javascript, specify an Accept header of <code>application/javascript</code> (if using XHR or just use a <code>&lt;script&gt;</code> tag otherwise) to receive the following binding code. Portions of the following code are programmatically generated, so you shouldn't cut-n-paste it. It's presented here for reference. <p/><pre>".$api->JSHeader);
 			foreach my $exposedModule ($api->exposed()) {
         		my $module = new $exposedModule;
 				$r->print($module->JSStub($r->construct_url));
 			}
 			$r->print("</pre><P/>");
-			$r->print("<h2>Perl Header</h2>When connecting using a Perl script, specify an Accept header of <code>application/perl</code> to receive the following binding code.<p/><pre>".$api->PerlHeader);
+			$r->print("<h2>Perl Header</h2>When connecting using a Perl script, specify an Accept header of <code>application/perl</code> to receive the following binding code. Portions of the following code are programmatically generated, so you shouldn't cut-n-paste it. It's presented here for reference. <p/><pre>".$api->PerlHeader);
 			foreach my $exposedModule ($api->exposed()) {
         		my $module = new $exposedModule;
 				$r->print($module->PerlStub($r->construct_url));
