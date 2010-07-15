@@ -145,19 +145,17 @@ function debugHandler(objjself, objjsel, s) {
 
 function getMethod(url, obj, callback, objjself, objjselector) {
 		if (JSON != undefined) {
-        		http.open("POST", url, callback ? true : false);
-        		http.setRequestHeader("Accept", "application/javascript");
-        		http.setRequestHeader('User-Agent',"WebFunk/$Net::WebFunk::API::VERSION");
-        		if (callback)
-        			http.onreadystatechange = function() {
-                		if (http.readyState==4)
-                       	 		if (http.status==200)
-                       	         		callback(objjself, objjselector, http.responseText);
-                	}
+				http.open("POST", url, callback ? true : false);
+				http.setRequestHeader("Accept", "application/javascript");
+				http.setRequestHeader('User-Agent',"WebFunk/$Net::WebFunk::API::VERSION");
+				if (callback)
+					http.onreadystatechange = function() {
+						if (http.readyState==4)
+							if (http.status==200)
+								callback(objjself, objjselector, http.responseText);
+					}
 				http.send(JSON.stringify(obj));
-				if (!callback) {
-					return http.responseText;
-				}
+				if (!callback) return http.responseText;
 		} else 
 			alert ("You must install and include JSON.js (Net::WebFunk::API)");
 }
@@ -185,21 +183,21 @@ use LWP::UserAgent;
 use JSON;
 
 sub getMethod {
-    my ($url, $obj, $callback) = @_;
-    die "url must be specified" unless (defined($url) && (ref($url) eq ""));
-    die "obj must be a hashref" unless (defined($obj) && (ref($obj) eq "HASH"));
+	my ($url, $obj, $callback) = @_;
+	die "url must be specified" unless (defined($url) && (ref($url) eq ""));
+	die "obj must be a hashref" unless (defined($obj) && (ref($obj) eq "HASH"));
 	my $ua = new LWP::UserAgent();
 	die "couldnt make new LWP::UserAgent" unless $ua;
 	$ua->agent("WebFunk/$Net::WebFunk::API::VERSION");
-    my $req = new HTTP::Request(POST => $url);
-    die "couldnt make new HTTP::Request" unless $req;
-    $req->content_type('application/x-www-form-urlencoded');
-    $req->content(encode_json($obj));
-    $req->header('Accept' => "application/perl");
-    my $res = $ua->request($req);
-    die "undefined response from HTTP::Request" unless $res;
-    if ($res->is_success) {
-    	if (defined($callback)) {
+	my $req = new HTTP::Request(POST => $url);
+	die "couldnt make new HTTP::Request" unless $req;
+	$req->content_type('application/x-www-form-urlencoded');
+	$req->content(encode_json($obj));
+	$req->header('Accept' => "application/perl");
+	my $res = $ua->request($req);
+	die "undefined response from HTTP::Request" unless $res;
+	if ($res->is_success) {
+		if (defined($callback)) {
 			&$callback("OK", decode_json($res->content));
 		} else {
 			return "OK", decode_json($res->content);
