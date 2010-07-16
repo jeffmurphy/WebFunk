@@ -159,11 +159,11 @@ function getMethod(url, obj, callback, objjself, objjselector) {
 					http.onreadystatechange = function() {
 						if (http.readyState == 4)
 							if (http.status == 200)
-								callback(objjself, objjselector, http.responseText);
+								callback(objjself, objjselector, JSON.parse(http.responseText.toString()));
 					}
 				}
 				http.send(JSON.stringify(obj));
-				if (async == false) return http.responseText;
+				if (async == false) return JSON.parse(http.responseText.toString());
 		} else 
 			alert ("You must install and include JSON.js (Net::WebFunk::API)");
 }
