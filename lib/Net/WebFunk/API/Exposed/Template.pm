@@ -30,22 +30,11 @@ This method will return a status of OK and whatever was passed to it.
 =cut
 
 sub methodPublic {
-	my ($self, $r) = (@_);
+	my $self = shift;
 
-	# this method can be called from the JS API
+	$self->debug();
 
-	my $buffer;
-	my $json;
-	if ($ENV{'REQUEST_METHOD'} eq "POST") {
-		my $blen = read(STDIN, $buffer, $ENV{'CONTENT_LENGTH'});
-		if ($blen > 0) {
-			$json = decode_json($buffer);
-			print STDERR "decoded buffer into " . Dumper($json) . "\n";
-		} else {
-			# there was no JSON object POSTed
-			print STDERR "ERROR: no JSON data available in POST\n";
-		}
-	}
+	my $json = $self->fetchJSON();
 
 	my $msg = "You sent: $buffer";
 
