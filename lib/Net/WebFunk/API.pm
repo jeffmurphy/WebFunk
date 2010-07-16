@@ -27,6 +27,13 @@ the caller. Currently WebFunk offers Perl and Javascript client bindings.
 
 =cut
 
+my $D = 0;
+
+sub debug {
+	my $n = shift;
+	$D = defined($n) ? $n : !$D;
+	return $D;
+}
 
 sub setExposedNamespace {
 	my ($self, $ns) = (@_);
@@ -282,6 +289,8 @@ sub JSStub {
     return $buffer;
 }
 
+# returns a string, containing the JSON representation of the given perl hash ref
+
 sub returnJSON {
         my ($self, $h) = (@_);
 
@@ -296,6 +305,25 @@ sub returnJSON {
                                 }
                 );
         }
+}
+
+# returns a hashref of the decoded JSON code read in from stdin 
+
+sub fetchJSON {
+	my $self = shift;
+	my $buffer;
+	my $json = {};
+	if ($ENV{'REQUEST_METHOD'} eq "POST") {
+		my $blen = read(STDIN, $buffer, $ENV{'CONTENT_LENGTH'});
+		if ($blen > 0) {
+			$json = decode_json($buffer);
+			print STDERR "decoded buffer into " . Dumper($json) . "\n" if $D;
+		} else {
+			# there was no JSON object POSTed
+			print STDERR "ERROR: no JSON data available in POST\n" if $D;
+		}
+	}
+	return $json;
 }
 
 1;
