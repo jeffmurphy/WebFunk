@@ -22,4 +22,5 @@ Renamed from Net::JS to Net::WebFunk
 0.04 20100713
 
 Added ability to specify multiple apache binding points and associate those to separate module
-repositories
+repositories. Added synchronous calls. Refactored redundant code.
+
