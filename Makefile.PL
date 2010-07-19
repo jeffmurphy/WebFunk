@@ -12,7 +12,12 @@ WriteMakefile(
 				'Pod::POM' => 0,
 				'Pod::POM::View::HTML' => 0,
 				'LWP' => 0,
-				'LWP::UserAgent'
+				'LWP::UserAgent' => 0,
+				'Apache2::Request' => 0,
+				'Apache2::RequestRec' => 0,
+				'Apache2::RequestIO' => 0,
+				'Apache2::Const' => 0,
+				'Apache2::URI' => 0
 			}, 
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
       (ABSTRACT       => 'Lightweight Multi-language HTTP RPC', # retrieve abstract from module
