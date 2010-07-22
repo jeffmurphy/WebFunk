@@ -295,7 +295,9 @@ sub returnJSON {
         my ($self, $h) = (@_);
 
         if(defined($h)) {
-        	print encode_json($h);
+        	my $jso = encode_json($h);
+        	print STDERR "[jsonoutput] " . JSON->new->pretty->encode($h) ."\n" if $D;
+        	print $jso;
             #print JSON->new->pretty->encode($h);
         } else {
                 print JSON->new->pretty->encode(
@@ -317,7 +319,7 @@ sub fetchJSON {
 		my $blen = read(STDIN, $buffer, $ENV{'CONTENT_LENGTH'});
 		if ($blen > 0) {
 			$json = decode_json($buffer);
-			print STDERR "decoded buffer into " . Dumper($json) . "\n" if $D;
+			print STDERR "decoded buffer ($json) into " . Dumper($json) . "\n" if $D;
 		} else {
 			# there was no JSON object POSTed
 			print STDERR "ERROR: no JSON data available in POST\n" if $D;
