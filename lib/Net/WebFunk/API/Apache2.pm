@@ -40,7 +40,7 @@ sub handler {
 	if (defined($exppath)) {
 		push @INC, $exppath unless grep(/^$exppath$/,@INC) > 0;
 	}
-	my $api = new Net::WebFunk::API();
+	my $api = new Net::WebFunk::API(r => $r);
 	$api->setExposedNamespace($r->dir_config('WebFunkExpRoot'));
 
 	# if you enter just the URL into a browser, safari and FF will send over a list of accepted types,
@@ -65,7 +65,7 @@ sub handler {
 	my $wantdoc = (!$wantperl && !$wantjs) ? 1 : 0;
 	
 	#print STDERR $r->uri . " accept: $acceptheader \n";
-	#print STDERR $r->uri . " client wants any of: " . join(', ', @http_accept) . " wantdoc:$wantdoc wantperl:$wantperl wantjs:$wantjs\n";
+	print STDERR $r->uri . " client wants any of: " . join(', ', @http_accept) . " wantdoc:$wantdoc wantperl:$wantperl wantjs:$wantjs\n";
 	
 	# if the top level (typically http://server/api or http://server/api/) is called
 	# then this code handles outputting all of the exposed modules or a table
@@ -90,7 +90,7 @@ sub handler {
 			$r->print("<h1>Package: $baseclass</h1>");
 			$r->print("<h2>Exposed Methods</h2><table>");
 			foreach my $exposedModule ($api->exposed()) {
-        		my $module = new $exposedModule;
+        		my $module = new $exposedModule(r => $r);
         		my $exmod = ref($module);
         		$exmod =~ s/^${baseclass}:://;
         		my $url = $r->construct_url;
@@ -99,13 +99,13 @@ sub handler {
 			}
        		$r->print("</table><h2>Javascript Header</h2>When connecting using Javascript, specify an Accept header of <code>application/javascript</code> (if using XHR or just use a <code>&lt;script&gt;</code> tag otherwise) to receive the following binding code. Portions of the following code are programmatically generated, so you shouldn't cut-n-paste it. It's presented here for reference. <p/><pre>".$api->JSHeader);
 			foreach my $exposedModule ($api->exposed()) {
-        		my $module = new $exposedModule;
+        		my $module = new $exposedModule(r => $r);
 				$r->print($module->JSStub($r->construct_url));
 			}
 			$r->print("</pre><P/>");
 			$r->print("<h2>Perl Header</h2>When connecting using a Perl script, specify an Accept header of <code>application/perl</code> to receive the following binding code. Portions of the following code are programmatically generated, so you shouldn't cut-n-paste it. It's presented here for reference. <p/><pre>".$api->PerlHeader);
 			foreach my $exposedModule ($api->exposed()) {
-        		my $module = new $exposedModule;
+        		my $module = new $exposedModule(r => $r);
 				$r->print($module->PerlStub($r->construct_url));
 			}
 			$r->print("</pre><P/>");
@@ -113,7 +113,7 @@ sub handler {
 			$r->print($api->JSHeader) if $wantjs;
 			$r->print($api->PerlHeader) if $wantperl;
 			foreach my $exposedModule ($api->exposed()) {
-        		my $module = new $exposedModule;
+        		my $module = new $exposedModule(r => $r);
 				$r->print($module->JSStub($r->construct_url)) if $wantjs;
 				$r->print($module->PerlStub($r->construct_url)) if $wantperl;
 			}
@@ -158,7 +158,7 @@ sub handler {
 
 		# it exists, so initialize it and check for func
 
-        my $module = new $calledModule;
+        my $module = new $calledModule(r => $r);
 
 		if($calledMethod ne '') {
 			# move this check into API, $module->methodExists($calledMethod);

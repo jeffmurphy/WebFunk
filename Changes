@@ -24,3 +24,7 @@ Renamed from Net::JS to Net::WebFunk
 Added ability to specify multiple apache binding points and associate those to separate module
 repositories. Added synchronous calls. Refactored redundant code.
 
+0.05 20100728
+
+Modified moose constructors to pass Apache::RequestRec around between objects
+

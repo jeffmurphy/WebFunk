@@ -5,8 +5,9 @@ use Moose; # automatically turns on strict and warnings
 use Module::Pluggable search_path => ['Net::Funk::API::Exposed'], sub_name => 'exposed', require => 1;
 use JSON;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
+has 'r' => (is => 'rw', isa => 'Apache2::RequestRec', required => 1);
 
 =head1 NAME
 
@@ -293,19 +294,20 @@ sub JSStub {
 
 sub returnJSON {
         my ($self, $h) = (@_);
+       	my $r = $self->r;
 
         if(defined($h)) {
         	my $jso = encode_json($h);
         	print STDERR "[jsonoutput] " . JSON->new->pretty->encode($h) ."\n" if $D;
-        	print $jso;
+        	$r->print($jso);
             #print JSON->new->pretty->encode($h);
         } else {
-                print JSON->new->pretty->encode(
+                $r->print(JSON->new->pretty->encode(
                                 {
                                'status'  => 'NOK',
                                'message' => 'Function Returned No Value'
                                 }
-                );
+                ));
         }
 }
 
