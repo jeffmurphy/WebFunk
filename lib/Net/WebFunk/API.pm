@@ -5,7 +5,7 @@ use Moose; # automatically turns on strict and warnings
 use Module::Pluggable search_path => ['Net::Funk::API::Exposed'], sub_name => 'exposed', require => 1;
 use JSON;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 has '_r' => (is => 'rw', isa => 'Apache2::RequestRec', required => 1);
 
@@ -74,6 +74,7 @@ sub mydoc {
 	use Pod::POM::View::HTML;
 	
 	my $self   = shift;
+	my $donly  = shift || 0;
 	my $path   = $self->mypath();
 	return "Documentation unavailable." unless defined $path;
 	
@@ -85,6 +86,14 @@ sub mydoc {
 		return "Documentation unavailable.";
 	}
 	
+	if ($donly) {
+		# just return the description (the NAME head1 block if available)
+		foreach my $head1 ($pom->head1()) {
+			return $head1->content() if ($head1->title() eq "NAME");
+		}
+		return "No description available (NAME head1).";
+	}
+
 	return Pod::POM::View::HTML->print($pom);
 }
 

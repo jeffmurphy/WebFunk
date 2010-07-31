@@ -94,7 +94,7 @@ sub handler {
         		my $exmod = ref($module);
         		$exmod =~ s/^${baseclass}:://;
         		my $url = $r->construct_url;
-        		my $mdesc = $module->_mydoc(1);
+        		my $mdesc = $module->mydoc(1);
         		$r->print('<tr><td class="col1"><a href="' . $url . "/$exmod/\">" . "$exmod</td><td class='col2'>$mdesc</td></tr></a><br/>");
 			}
        		$r->print("</table><h2>Javascript Header</h2>When connecting using Javascript, specify an Accept header of <code>application/javascript</code> (if using XHR or just use a <code>&lt;script&gt;</code> tag otherwise) to receive the following binding code. Portions of the following code are programmatically generated, so you shouldn't cut-n-paste it. It's presented here for reference. <p/><pre>".$api->JSHeader);
@@ -183,12 +183,12 @@ sub handler {
 			# module but no method, print js for this module only
 			if ($wantdoc) {
 		        my $methodMap = $module->meta->_full_method_map;
-				if (!exists ($methodMap->{'_mydoc'})) {
-					print STDERR "The client wants doc for this module, but you forgot the _mydoc routine. " . $r->path_info . "\n";
-					$r->print("Documentation unavailable (_mydoc missing)");
-				} else {
-					$r->print($module->_mydoc(0));
-				}
+#				if (!exists ($methodMap->{'mydoc'})) {
+#					print STDERR "The client wants doc for this module, but you forgot the _mydoc routine. " . $r->path_info . "\n";
+#					$r->print("Documentation unavailable (_mydoc missing)");
+#				} else {
+					$r->print($module->mydoc(0));
+#				}
 			} else {	
 				$r->print($api->JSHeader) if $wantjs;
 				$r->print($api->PerlHeader) if $wantperl;
