@@ -183,12 +183,7 @@ sub handler {
 			# module but no method, print js for this module only
 			if ($wantdoc) {
 		        my $methodMap = $module->meta->_full_method_map;
-#				if (!exists ($methodMap->{'mydoc'})) {
-#					print STDERR "The client wants doc for this module, but you forgot the _mydoc routine. " . $r->path_info . "\n";
-#					$r->print("Documentation unavailable (_mydoc missing)");
-#				} else {
-					$r->print($module->mydoc(0));
-#				}
+				$r->print($module->mydoc(0));
 			} else {	
 				$r->print($api->JSHeader) if $wantjs;
 				$r->print($api->PerlHeader) if $wantperl;
