@@ -7,7 +7,7 @@ use JSON;
 
 our $VERSION = '0.05';
 
-has 'r' => (is => 'rw', isa => 'Apache2::RequestRec', required => 1);
+has '_r' => (is => 'rw', isa => 'Apache2::RequestRec', required => 1);
 
 =head1 NAME
 
@@ -249,8 +249,7 @@ sub PerlStub {
         push (@functionList, $funcCode);
     }
 
-
-	my $buffer = join(",\n", @functionList) . "\n"; 
+	my $buffer = join("\n", @functionList) . "\n"; 
 
     return $buffer;
 }
@@ -294,7 +293,7 @@ sub JSStub {
 
 sub returnJSON {
         my ($self, $h) = (@_);
-       	my $r = $self->r;
+       	my $r = $self->_r;
 
         if(defined($h)) {
         	my $jso = encode_json($h);

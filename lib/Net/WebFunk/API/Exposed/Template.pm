@@ -4,6 +4,7 @@ use JSON;
 use Data::Dumper;
 
 extends 'Net::WebFunk::API';
+has 'r' => (is => 'rw', isa => 'Apache2::RequestRec', required => 1);
 
 =head1 NAME
 
