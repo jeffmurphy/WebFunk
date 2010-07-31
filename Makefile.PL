@@ -7,7 +7,8 @@ WriteMakefile(
     VERSION_FROM      => 'lib/Net/WebFunk/API.pm', # finds $VERSION
     PREREQ_PM         => {
 				'JSON'  => 0,
-				'Moose' => 0,
+				'Moose' => 1.08,
+				'Class::MOP' => 1.04,
 				'Module::Pluggable' => 0,
 				'Pod::POM' => 0,
 				'Pod::POM::View::HTML' => 0,
