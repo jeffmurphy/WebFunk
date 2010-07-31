@@ -34,9 +34,10 @@ sub methodPublic {
 
 	$self->debug();
 
-	my $json = $self->fetchJSON();
+	my $perlhash = $self->fetchJSON();
 
-	my $msg = "You sent: $buffer";
+	use Data::Dumper;
+	my $msg = "You sent: " . Dumper($perlhash);
 
 	$self->returnJSON(
 			{
