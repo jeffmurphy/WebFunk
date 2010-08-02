@@ -4,6 +4,7 @@ package Net::WebFunk::API;
 use Moose; # automatically turns on strict and warnings
 use Module::Pluggable search_path => ['Net::Funk::API::Exposed'], sub_name => 'exposed', require => 1;
 use JSON;
+use Data::Dumper;
 
 our $VERSION = '0.06';
 
