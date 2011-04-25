@@ -32,3 +32,6 @@ Modified moose constructors to pass Apache::RequestRec around between objects
 
 Since mydoc and mypath are inherited, I removed _mydoc _mypath from Template.pm 
 
+0.07 20100804
+
+Minor bug in Template.pm fixed
