@@ -1,31 +1,40 @@
 package Bundle::WebFunk;
 
-=pod
+$VERSION = "0.01";
+
+=pod 
+
+=head1 NAME
+
+Bundle::WebFunk
 
 =head1 CONTENT
 
- Apache2::Const;
+Apache2::Const;
 
- Apache2::Request;
+Apache2::Request;
 
- Apache2::RequestIO;
+Apache2::RequestIO;
 
- Apache2::RequestRec;
+Apache2::RequestRec;
 
- Apache2::URI;
+Apache2::URI;
 
- Data::Dumper;
+Data::Dumper;
 
- JSON;
+JSON;
 
- LWP;
+LWP;
 
- LWP::UserAgent;
+LWP::UserAgent;
 
- Module::Pluggable;
+Module::Pluggable;
 
- Moose;
+Moose;
 
+=head1 AUTHOR
+
+Jeff Murphy jcmurphy@jeffmurphy.org
 
 =cut
 
