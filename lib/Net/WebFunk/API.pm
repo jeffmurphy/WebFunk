@@ -6,7 +6,7 @@ use Module::Pluggable search_path => ['Net::Funk::API::Exposed'], sub_name => 'e
 use JSON;
 use Data::Dumper;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 has '_r' => (is => 'rw', isa => 'Apache2::RequestRec', required => 1);
 
@@ -203,33 +203,45 @@ use JSON;
 
 sub getMethod {
 	my (\$url, \$obj, \$callback) = \@_;
-	die "url must be specified" unless (defined(\$url) && (ref(\$url) eq ""));
-	die "obj must be a hashref" unless (defined(\$obj) && (ref(\$obj) eq "HASH"));
+	err \$callback, "url must be specified" unless (defined(\$url) && (ref(\$url) eq ""));
+	err \$callback, "obj must be a hashref" unless (defined(\$obj) && (ref(\$obj) eq "HASH"));
 	my \$ua = new LWP::UserAgent();
-	die "couldnt make new LWP::UserAgent" unless \$ua;
+	err \$callback, "couldnt make new LWP::UserAgent" unless \$ua;
 	\$ua->agent("WebFunk/${VERSION};" . (defined(\$callback) ? "a" : "") . "synchronous");
 	my \$req = new HTTP::Request(POST => \$url);
-	die "couldnt make new HTTP::Request" unless \$req;
+	err \$callback, "couldnt make new HTTP::Request" unless \$req;
 	\$req->content_type('application/x-www-form-urlencoded');
 	\$req->content(encode_json(\$obj));
 	\$req->header('Accept' => "application/perl");
 	my \$res = \$ua->request(\$req);
-	die "undefined response from HTTP::Request" unless \$res;
+	err \$callback, "undefined response from HTTP::Request" unless \$res;
 	if (\$res->is_success) {
 		if (defined(\$callback)) {
 			\&\$callback("OK", decode_json(\$res->content));
+			return;
 		} else {
 			return "OK", decode_json(\$res->content);
 		}
 	} else {
 		if (defined(\$callback)) {
-			\&\$callback("NOK", \$res->status_line);
+			\&\$callback("NOK", { 'code' => \$res->code, 'message' => \$res->status_line } );
+			return;
 		} else {
-			return "NOK", \$res->status_line;
+			return "NOK", { 'code' => \$res->code, 'message' => \$res->status_line } ;
 		}
 	}
+	#NOTREACHED
 }
 
+sub err {
+	my \$callback = shift; 
+	my \$msg = shift;
+	if (defined(\$callback)) {
+	    \&\$callback("NOK", \$msg);
+	    return;
+	}
+    return "NOK", \$msg;
+}
 |;
 
 	return $buffer;
