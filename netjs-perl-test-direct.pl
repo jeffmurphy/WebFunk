@@ -52,7 +52,7 @@ if ($@) {
 	my ($rv, $content) = Template::methodPublic($arguments, undef); # synchronous
 	print "Returned with status: " . $rv . "\n";
 	print "Content from server: " . Dumper($content) . "\n" if ($rv eq "OK");
-	print "Error code from server: $content\n" if ($rv eq "NOK");
+	print "Error code from server: " . Dumper($content) . "\n" if ($rv eq "NOK");
 
 	print "\nCalling methodPublic asynchronously..\n";
 	Template::methodPublic($arguments, \&mycallback);
@@ -66,5 +66,5 @@ sub mycallback {
 	
 	print "Inside callback, status is $status\n";
 	print "Content from server: " . Dumper($content) . "\n" if ($status eq "OK");
-	print "Error code from server: $content\n" if ($status eq "NOK");
+	print "Error code from server: " . Dumper($content) . "\n" if ($status eq "NOK");
 }
