@@ -32,6 +32,8 @@ Module::Pluggable;
 
 Moose;
 
+Pod::POM
+
 =head1 AUTHOR
 
 Jeff Murphy jcmurphy@jeffmurphy.org
