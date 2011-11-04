@@ -203,18 +203,18 @@ use JSON;
 
 sub getMethod {
 	my (\$url, \$obj, \$callback) = \@_;
-	err \$callback, "url must be specified" unless (defined(\$url) && (ref(\$url) eq ""));
-	err \$callback, "obj must be a hashref" unless (defined(\$obj) && (ref(\$obj) eq "HASH"));
+	return err \$callback, "url must be specified" unless (defined(\$url) && (ref(\$url) eq ""));
+	return err \$callback, "obj must be a hashref" unless (defined(\$obj) && (ref(\$obj) eq "HASH"));
 	my \$ua = new LWP::UserAgent();
-	err \$callback, "couldnt make new LWP::UserAgent" unless \$ua;
+	return err \$callback, "couldnt make new LWP::UserAgent" unless \$ua;
 	\$ua->agent("WebFunk/${VERSION};" . (defined(\$callback) ? "a" : "") . "synchronous");
 	my \$req = new HTTP::Request(POST => \$url);
-	err \$callback, "couldnt make new HTTP::Request" unless \$req;
+	return err \$callback, "couldnt make new HTTP::Request" unless \$req;
 	\$req->content_type('application/x-www-form-urlencoded');
 	\$req->content(encode_json(\$obj));
 	\$req->header('Accept' => "application/perl");
 	my \$res = \$ua->request(\$req);
-	err \$callback, "undefined response from HTTP::Request" unless \$res;
+	return err \$callback, "undefined response from HTTP::Request" unless \$res;
 	if (\$res->is_success) {
 		if (defined(\$callback)) {
 			\&\$callback("OK", decode_json(\$res->content));
